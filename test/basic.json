@@ -1,0 +1,52 @@
+{
+  "packages": {
+    "foo": {
+      "branchesCovered": 1,
+      "lineRate": "0.5",
+      "branchRate": "0.5",
+      "linesCovered": 1,
+      "branchesTotal": 2,
+      "linesTotal": 2,
+      "classes": {
+        "Bar": {
+          "branchesCovered": 1,
+          "linesCovered": 1,
+          "branchesTotal": 2,
+          "methods": {
+            "(anonymous_1)": [
+              "1",
+              "1"
+            ],
+            "namedFn": [
+              "2",
+              "0"
+            ]
+          },
+          "lines": {
+            "1": {
+              "hits": 1,
+              "branchesCovered": 1,
+              "branchesTotal": 2,
+              "branch": true
+            },
+            "2": {
+              "hits": 0,
+              "branchesCovered": 0,
+              "branchesTotal": 0,
+              "branch": false
+            }
+          },
+          "linesTotal": 2,
+          "name": "file.ext"
+        }
+      }
+    }
+  },
+  "summary": {
+    "branchesCovered": 1,
+    "branchesTotal": 2,
+    "linesCovered": 1,
+    "linesTotal": 2
+  },
+  "timestamp": "1346815648000"
+}

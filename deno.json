@@ -1,0 +1,23 @@
+{
+  "tasks": {
+    "test": "deno fmt --check && deno lint && deno test --doc --check=all --allow-read --coverage=coverage && deno coverage coverage"
+  },
+  "fmt": {
+    "options": {
+      "lineWidth": 140
+    },
+    "files": {
+      "exclude": ["coverage"]
+    }
+  },
+  "lint": {
+    "files": {
+      "exclude": ["coverage"]
+    }
+  },
+  "test": {
+    "files": {
+      "exclude": ["coverage"]
+    }
+  }
+}
