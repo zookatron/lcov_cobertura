@@ -1,0 +1,51 @@
+stages:
+  - test
+  - build
+  - release
+
+test:
+  stage: test
+  image: denoland/deno:alpine-1.28.2
+  coverage: '/cover .* ... (\x1B(?:[@-Z\\-_]|\[[0-?]*[ -\/]*[@-~]))*\d+\.\d+%/'
+  script:
+    - deno task test
+    - deno coverage --lcov coverage > lcov
+    - deno run -A https://deno.land/x/lcov_cobertura/mod.ts lcov > coverage.xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+  only:
+    - tags
+
+build:
+  stage: build
+  image: denoland/deno:alpine-1.28.2
+  script:
+    - apk add git openssh
+    - deno compile mod.ts -o $CI_PROJECT_NAME
+    - deno run -A https://gitlab.com/zookatron/gitlab-build-tools/-/raw/main/upload_package.ts $CI_PROJECT_NAME
+    - deno run -A https://gitlab.com/zookatron/gitlab-build-tools/-/raw/main/changelog.ts > CHANGELOG
+    - mkdir -p ~/.ssh
+    - echo -e 'Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null' > ~/.ssh/config
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - git remote add github git@github.com:zookatron/lcov_cobertura.git
+    - git push github $CI_COMMIT_TAG:main
+    - git push github --tags
+  artifacts:
+    paths:
+      - CHANGELOG
+  only:
+    - tags
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - |
+      release-cli create --name $CI_COMMIT_TAG --description "$(cat CHANGELOG)" --tag-name $CI_COMMIT_TAG \
+      --assets-link "{\"name\":\"$CI_PROJECT_NAME\",\"url\":\"$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/$CI_PROJECT_NAME/$CI_COMMIT_TAG/$CI_PROJECT_NAME\",\"filepath\":\"/$CI_PROJECT_NAME\"}"
+  only:
+    - tags

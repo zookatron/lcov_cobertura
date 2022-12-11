@@ -1,5 +1,8 @@
 # LCOV to Cobertura XML Converter
 
+[![Deno version](https://deno.land/badge/lcov_cobertura/version)](https://deno.land/x/lcov_cobertura)
+[![Release](https://gitlab.com/zookatron/lcov_cobertura/-/badges/release.svg)](https://gitlab.com/zookatron/lcov_cobertura/-/releases/permalink/latest)
+
 Converts code coverage report files in LCOV format to Cobertura's XML report format so that CI servers like Jenkins can aggregate results
 and determine build stability etc.
 
